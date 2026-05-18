@@ -1,0 +1,12 @@
+[
+   {
+      "directory" : "D:/Ti_Workspace/TM4C1294ncpdt_default_project/Debug",
+      "command"   : "clang++ -I\"D:/Ti_Workspace/TM4C1294ncpdt_default_project\" -I\"C:/ti/TivaWare_C_Series-2.2.0.295\" -I\"C:/ti/ti-cgt-arm_20.2.4.LTS/include\" -Dccs=\"ccs\" -DPART_TM4C1294NCPDT -xc",
+      "file"      : "D:/Ti_Workspace/TM4C1294ncpdt_default_project/main.c"
+   },
+   {
+      "directory" : "D:/Ti_Workspace/TM4C1294ncpdt_default_project/Debug",
+      "command"   : "clang++ -I\"D:/Ti_Workspace/TM4C1294ncpdt_default_project\" -I\"C:/ti/TivaWare_C_Series-2.2.0.295\" -I\"C:/ti/ti-cgt-arm_20.2.4.LTS/include\" -Dccs=\"ccs\" -DPART_TM4C1294NCPDT -xc",
+      "file"      : "D:/Ti_Workspace/TM4C1294ncpdt_default_project/tm4c1294ncpdt_startup_ccs.c"
+   }
+]
