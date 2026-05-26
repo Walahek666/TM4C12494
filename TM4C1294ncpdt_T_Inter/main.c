@@ -38,15 +38,16 @@ void configure_timers() {
     while (!(SYSCTL_PRTIMER_R & 0x01));      // wait for clock to stabilize for the Timer
     TIMER0_CTL_R &= ~0x001;   // disable Timer0 A
     TIMER0_CFG_R = 0x0004; //16bit Mode in Timer 0, 0x0 32 bit mode, 0x1 RTC
-    TIMER0_TAMR_R = 0x01; //Pin 5 is for Match enabled for Interrupts (0x22) and periodic
-    // Timer AB Mode 0x1 One shot ox2 Periodic Timer
+    TIMER0_TAMR_R = 0x22; //Pin 5 is for Match enabled for
+    // Timer AB Mode 0x1 One shot,(0x22)  periodic
     //pin4 Up Mode  | (0x1 << 4) Down mode pin 4 is 0.
-    //TIMER0_TAMATCHR_R = 0x00; //Match Register
     //int32_t ctime = TIMER0_TAR_R; // Current Time
     /*120MHz clock is set: tick is 120000000 ticks per sec */
-    TIMER0_TAILR_R = (0xEA60-1); // Load Value/ 1000/60000()
-    TIMER0_TAPR_R = (0x02-1); //sets the prescaler/ 120/2
+    TIMER0_TAPR_R = (123-1); //sets the prescaler/ 120/2
+    TIMER0_TAMATCHR_R = (39024-1); //Match Register
+    TIMER0_TAILR_R = (65041-1); // Load Value/ 1000/60000()
     
+    TIMER0_CTL_R = 0x0001; // Start Timer0 A
 }
 
 /*******************************************************************************************/
@@ -72,16 +73,23 @@ int main(void) {
     int i = 0; // loop counter
 
     // Configure Timers and Ports
-    configure_timers();
     configure_ports();
+    configure_timers();
+    
 
     while(1) {
         // toggle Port D Pin 1
-        GPIO_PORTD_AHB_DATA_R |= 0x02;
-        // Hardware Delay
-        sleep(100);
-        GPIO_PORTD_AHB_DATA_R &= ~0x02;
-        sleep(100);
+        GPIO_PORTD_AHB_DATA_R |= 0x02; //High for 300ms
+        
+        while (!(TIMER0_RIS_R & (0x01 << 4))); //Polling
+        TIMER0_ICR_R = (0x01 << 4); // Clear the flag
+
+        GPIO_PORTD_AHB_DATA_R &= ~0x02; //Low for 200ms
+
+        while (!(TIMER0_RIS_R & (0x01 << 0)));
+        TIMER0_ICR_R = (0x01 << 0); // Clear the flag by writing 1 to the Interrupt Clear Register
+        
+        //sleep(100);// Hardware Delay
 
         printf("\nCounter value: %d", i++);    
     }
